@@ -4,7 +4,6 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-langchain = "*"
 python-dotenv = "*"
 streamlit = "*"
 faiss-cpu = "*"
@@ -13,6 +12,9 @@ watchdog = "*"
 pypdf = "*"
 llama-hub = "*"
 pypdf2 = "*"
+langchain = {version = "*", extras = ["docarray"]}
+ipython = "*"
+llama-index = "*"
 
 [dev-packages]
 
