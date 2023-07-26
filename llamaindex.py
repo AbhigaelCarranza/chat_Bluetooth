@@ -12,28 +12,25 @@ import sys
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
 
-def vectorStore_llamaindex():
-    file="/mnt/c/Users/amendez/github/chat_Bluetooth/Files/bluetooth-act.pdf"
-    load_dotenv()
-    faiss_index = faiss.IndexFlatIP(1536)
-    #Load Documents
-    documents=PDFReader().load_data(file=Path(file))
-    embeddings = OpenAIEmbedding()
-    st.write(documents)
-    
-    vector_store = FaissVectorStore(faiss_index=faiss_index)
-    service_context = ServiceContext.from_defaults(embed_model=embeddings)
-    storage_context = StorageContext.from_defaults(vector_store=vector_store)
-    index = VectorStoreIndex.from_documents(documents,storage_context=storage_context)
-    st.write(index)
-    #Save index to disk
-    # index.storage_context.persist()
-    #Load index from disk
-    # vector_store =FaissVectorStore.from_persist_dir("./storage")
-    # storage_context = StorageContext.from_defaults(vector_store=vector_store, persist_dir="./storage")
-    # index = load_index_from_storage(storage_context=storage_context)       
-    # st.write(index) 
-    # return index
 
-if __name__ == "__main__":
-    vectorStore_llamaindex()
+file="/mnt/c/Users/amendez/github/chat_Bluetooth/Files/bluetooth-act.pdf"
+load_dotenv()
+faiss_index = faiss.IndexFlatIP(1536)
+#Load Documents
+documents=PDFReader().load_data(file=Path(file))
+# embeddings = OpenAIEmbedding()
+st.write(documents)
+
+# vector_store = FaissVectorStore(faiss_index=faiss_index)
+# service_context = ServiceContext.from_defaults(embed_model=embeddings)
+# storage_context = StorageContext.from_defaults(vector_store=vector_store)
+index = VectorStoreIndex.from_documents(documents=documents)
+st.write(index)
+#Save index to disk
+# index.storage_context.persist()
+#Load index from disk
+# vector_store =FaissVectorStore.from_persist_dir("./storage")
+# storage_context = StorageContext.from_defaults(vector_store=vector_store, persist_dir="./storage")
+# index = load_index_from_storage(storage_context=storage_context)       
+# st.write(index) 
+# return index
