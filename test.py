@@ -41,12 +41,47 @@ def clear_memory(memory):
 def streamlit_chatbot(agent_executor,memory):
     st.header("Chat with yor PDF about Bluetooth")
 
+    tools = [
+        Tool(
+            name="Hardware_QA_System",
+            func=lambda q:str(index.as_query_engine().query(q)),
+            description="Always use this tool, useful for when you want to answer queries about hardware embedded in Bluetooth devices",
+            return_direct=True
+        )
+    ]
+
+    memory=ConversationBufferMemory(memory_key='chat_history',return_messages=True, input_key="input", output_key="output")
+    llm=ChatOpenAI(temperature=0,model="gpt-3.5-turbo",streaming=True)
+    # memory=ConversationSummaryBufferMemory(llm=llm,return_messages=True)
+    agent_executor=initialize_agent(tools,llm,agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION,verbose=True,memory=memory)
+    # response=agent_executor.run(input="Can you use SCO or eSCO in LE?")
+    # st.write(agent_executor)
+    return agent_executor, memory
+
+def streamlit_chatbot():
+    tools = [
+        Tool(
+            name="Hardware_QA_System",
+            func=lambda q:str(index.as_query_engine().query(q)),
+            description="Always use this tool, useful for when you want to answer queries about hardware embedded in Bluetooth devices",
+            return_direct=True
+        )
+    ]
+
+    memory=ConversationBufferMemory(memory_key='chat_history',return_messages=True, input_key="input", output_key="output")
+    llm=ChatOpenAI(temperature=0,model="gpt-3.5-turbo",streaming=True)
+    # memory=ConversationSummaryBufferMemory(llm=llm,return_messages=True)
+    agent_executor=initialize_agent(tools,llm,agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION,verbose=True,memory=memory) 
+    
+    st.header("Chat with yor PDF about Bluetooth")
+    with st.sidebar:
+        st.write(agent_executor.memory)
     if "messages" not in st.session_state or st.sidebar.button("Clear message history", on_click=clear_memory, args=(memory,)):
         st.session_state["messages"] = [{"role": "assistant", "content": "How can I help you?"}]
 
     for msg in st.session_state.messages:
         st.chat_message(msg["role"]).write(msg["content"])
-
+    
     if prompt := st.chat_input(placeholder="What question do you have about Bluetooth?"):
         st.session_state.messages.append({"role": "user", "content": prompt})
         st.chat_message("user").write(prompt)
@@ -55,6 +90,12 @@ def streamlit_chatbot(agent_executor,memory):
             # retrieval_handler = PrintRetrievalHandler(st.container())
             stream_handler=StreamHandler(st.empty())
             # stream_handler=StreamlitCallbackHandler(st.container(),expand_new_thoughts=True)
+            # try:
+            #     response = agent_executor.run(input=prompt, callbacks=[stream_handler])
+            # except ValueError as ve:
+            #     response = str(ve).strip('Could not parse LLM output: ')
+            
+            # response = agent_executor.run(prompt)
             response = agent_executor.run(input=prompt, callbacks=[stream_handler])
             st.session_state.messages.append({"role": "assistant", "content": response})
 
