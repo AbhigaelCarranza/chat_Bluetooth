@@ -15,6 +15,7 @@ pypdf2 = "*"
 langchain = {version = "*", extras = ["docarray"]}
 ipython = "*"
 llama-index = "*"
+requests = "*"
 
 [dev-packages]
 

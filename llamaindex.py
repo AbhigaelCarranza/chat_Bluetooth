@@ -1,16 +1,14 @@
 from llama_index import (VectorStoreIndex,StorageContext,ServiceContext,LLMPredictor)
 from llama_index.vector_stores.faiss import FaissVectorStore
-from llama_index.embeddings import OpenAIEmbedding
 from llama_hub.file.pdf.base import PDFReader
 from langchain.chat_models import ChatOpenAI
-
 from dotenv import load_dotenv
 from pathlib import Path
-import os
 import openai
 import faiss
 import logging
 import sys
+import os
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))

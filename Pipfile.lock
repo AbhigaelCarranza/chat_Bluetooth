@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "3d025849d8458789ac4e791d9b00ceb2fb4f3e3a91e23615c599dd719c01dd4b"
+            "sha256": "2a14c5111340f11bdae8bef6d56dea24cdfbe194d106c6a333ef74e604a774f1"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -775,19 +775,19 @@
                 "docarray"
             ],
             "hashes": [
-                "sha256:c5907648ae7713a04069d567d51bbcc15cb16b7cf18e5b937c00b2ebbdab780d",
-                "sha256:ea6e09be2c176dab66ac4d060fe1a042ccf12f1b9c66662d55a5efae18139af1"
+                "sha256:2eed7a6666b190fe9a9a329c57e6a23fd5b6b76af88fb8f7f6cd347a8f2d7b22",
+                "sha256:52446fe964a5301c4b6be765d13e9a39d0d098f35d6a38c7700b138bf5cd86df"
             ],
             "index": "pypi",
-            "version": "==0.0.242"
+            "version": "==0.0.245"
         },
         "langsmith": {
             "hashes": [
-                "sha256:146379f4ed8a7a28794c52b74009d40875371080a16a87bba95c410160b00b92",
-                "sha256:d3c367fa72b88a226919e6c902e34d83791efd1250f284e84cf17eacc37558b9"
+                "sha256:8382de23d469bb8062a5eb8b7fc9971068981c92233db63a3c25ccf4f85aaf23",
+                "sha256:c5e3d2cc50a2f6f5c4aaf3f8998a25f85dd94b3cd016bc4999be51000c933b3f"
             ],
             "markers": "python_version < '4.0' and python_full_version >= '3.8.1'",
-            "version": "==0.0.14"
+            "version": "==0.0.15"
         },
         "llama-hub": {
             "hashes": [
@@ -799,11 +799,11 @@
         },
         "llama-index": {
             "hashes": [
-                "sha256:7e879d7b78bfcde456e55ec6b83882bc6ce69671b87a99c9f5eb09e721af6c03",
-                "sha256:cd76caddea96b9f1f08f849c63e3550ef992490533c5fb1218770fef74ab4fe5"
+                "sha256:1fa7ce17052ab9b936f90870c591d578df80a5ecf15cd05b261cd067aeed4c42",
+                "sha256:bbb6319f65fdfefdd3f7cdd21000b1269b62abea3eb0c50f15a35081cc98e34d"
             ],
             "index": "pypi",
-            "version": "==0.7.12"
+            "version": "==0.7.13"
         },
         "lxml": {
             "hashes": [
@@ -1809,7 +1809,7 @@
                 "sha256:58cd2187c01e70e6e26505bca751777aa9f2ee0b7f4300988b709f44e013003f",
                 "sha256:942c5a758f98d790eaed1a29cb6eefc7ffb0d1cf7af05c3d2791656dbd6ad1e1"
             ],
-            "markers": "python_version >= '3.7'",
+            "index": "pypi",
             "version": "==2.31.0"
         },
         "requests-oauthlib": {

@@ -43,7 +43,7 @@ class VectorStore:
         docs=pdf.load()
 
         # Split documents
-        text_splitter = RecursiveCharacterTextSplitter(chunk_size=1500, chunk_overlap=200)
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=1500, chunk_overlap=200,length_function=len)
         splits = text_splitter.split_documents(docs)
 
         # Create embeddings and store in vectordb
