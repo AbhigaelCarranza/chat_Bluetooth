@@ -33,28 +33,28 @@ def load_index():
     index = load_index_from_storage(storage_context=storage_context)
     return index
 
+def main():
+    load_dotenv()
+    openai.api_key = os.getenv("OPENAI_API_KEY")
+    index=load_index()
 
+    tools = [
+        Tool(
+            name="Hardware_QA_System",
+            func=lambda q:str(index.as_query_engine().query(q)),
+            description="Always use this tool, useful for when you want to answer queries about hardware embedded in Bluetooth devices",
+            return_direct=True
+        )
+    ]
 
-load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
-index=load_index()
-
-tools = [
-    Tool(
-        name="Hardware_QA_System",
-        func=lambda q:str(index.as_query_engine().query(q)),
-        description="Always use this tool, useful for when you want to answer queries about hardware embedded in Bluetooth devices",
-        return_direct=True
-    )
-]
-
-memory=ConversationBufferMemory(memory_key='chat_history', return_messages=True, input_key="input", output_key="output")
-llm=ChatOpenAI(temperature=0,model="gpt-3.5-turbo", streaming=True)
-# memory=ConversationSummaryBufferMemory(llm=llm,return_messages=True)
-agent_executor=initialize_agent(tools,llm, agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION, verbose=True, memory=memory)
-
+    memory=ConversationBufferMemory(memory_key='chat_history', return_messages=True, input_key="input", output_key="output")
+    llm=ChatOpenAI(temperature=0,model="gpt-3.5-turbo", streaming=True)
+    # memory=ConversationSummaryBufferMemory(llm=llm,return_messages=True)
+    agent_executor=initialize_agent(tools,llm, agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION, verbose=True, memory=memory)
+    return agent_executor
 
 if __name__ == "__main__":
+    agent_executor=main()
     agent_executor.run(input="My name is Abhigael, I am a software engineer.")
     print(agent_executor.memory)
     agent_executor.run(input="What is my name?.")
