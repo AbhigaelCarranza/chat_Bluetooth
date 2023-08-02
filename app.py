@@ -56,7 +56,7 @@ def clear_memory(memory):
 @st.cache_resource()
 def qa_chain(_vectordb):
     # Define retriever
-    retriever = _vectordb.as_retriever(search_type="mmr", search_kwargs={"k": 3, "fetch_k": 4})
+    retriever = _vectordb.as_retriever(search_type="similarity", search_kwargs={"k": 4})
     # Setup memory for contextual conversation
     memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
     # Setup LLM and QA chain
@@ -64,11 +64,11 @@ def qa_chain(_vectordb):
         model_name="gpt-3.5-turbo", temperature=0, streaming=True
     )
     qa = ConversationalRetrievalChain.from_llm(
-        llm, retriever=retriever, memory=memory, verbose=True
+        llm, retriever=retriever, memory=memory, verbose=True, chain_type="stuff"
     )
     return qa, memory
 
-@st.cache_data()
+# @st.cache_data()
 def streamlit_chatbot(_qa_chain, prompt):
     st.header("Chat with yor PDF about Bluetooth")
 
@@ -83,19 +83,17 @@ def streamlit_chatbot(_qa_chain, prompt):
         st.chat_message("user").write(prompt)
 
         with st.chat_message("assistant"):
-            # retrieval_handler = PrintRetrievalHandler(st.container())
+            retrieval_handler = PrintRetrievalHandler(st.container())
             # stream_handler=StreamHandler(st.empty())
             stream_handler=StreamlitCallbackHandler(st.container())
-            # response = qa.run(prompt, callbacks=[retrieval_handler, stream_handler])
-            response = _qa_chain.run(prompt, callbacks=[stream_handler])
+            response = _qa_chain.run(prompt, callbacks=[retrieval_handler, stream_handler])
+            # response = _qa_chain.run(prompt, callbacks=[stream_handler])
             st.session_state.messages.append({"role": "assistant", "content": response})
     
 if __name__ == "__main__":
     with open(f"test.pkl", "rb") as f:
         vectoredb = pickle.load(f)
     qa,memory=qa_chain(vectoredb)
-    st.sidebar.button("Clear message history", on_click=clear_memory, args=(memory,))
     prompt=st.chat_input(placeholder="What question do you have about Bluetooth?")
     streamlit_chatbot(qa,prompt)
-    st.write(memory)
-    st.write(qa.memory)
+    st.sidebar.button("Clear message history", on_click=clear_memory, args=(memory,))
