@@ -4,10 +4,11 @@ from langchain.memory import ConversationBufferMemory
 from langchain.callbacks import StreamlitCallbackHandler
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain.chat_models import ChatOpenAI
+from langchain.embeddings import OpenAIEmbeddings
 from dotenv import load_dotenv
+from utils import load_documents, get_faiss_vectorStore
 import streamlit as st
 import openai
-import pickle
 import os
 
 load_dotenv()
@@ -91,9 +92,11 @@ def streamlit_chatbot(_qa_chain, prompt):
             st.session_state.messages.append({"role": "assistant", "content": response})
     
 if __name__ == "__main__":
-    with open(f"test.pkl", "rb") as f:
-        vectoredb = pickle.load(f)
+    chunks = load_documents()
+    embeddings = OpenAIEmbeddings()
+    vectoredb = get_faiss_vectorStore(chunks=chunks, embeddings=embeddings)
     qa,memory=qa_chain(vectoredb)
+    
     prompt=st.chat_input(placeholder="What question do you have about Bluetooth?")
     streamlit_chatbot(qa,prompt)
     st.sidebar.button("Clear message history", on_click=clear_memory, args=(memory,))
