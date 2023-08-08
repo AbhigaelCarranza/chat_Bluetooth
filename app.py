@@ -6,7 +6,7 @@ from langchain.callbacks.base import BaseCallbackHandler
 from langchain.chat_models import ChatOpenAI
 from langchain.embeddings import OpenAIEmbeddings
 from dotenv import load_dotenv
-from utils import load_documents, get_faiss_vectorStore
+from Agent.utils import load_documents, get_faiss_vectorStore
 import streamlit as st
 import openai
 import os
@@ -85,12 +85,11 @@ def streamlit_chatbot(_qa_chain, prompt):
 
         with st.chat_message("assistant"):
             retrieval_handler = PrintRetrievalHandler(st.container())
-            # stream_handler=StreamHandler(st.empty())
             stream_handler=StreamlitCallbackHandler(st.container())
             response = _qa_chain.run(prompt, callbacks=[retrieval_handler, stream_handler])
             # response = _qa_chain.run(prompt, callbacks=[stream_handler])
             st.session_state.messages.append({"role": "assistant", "content": response})
-    
+     
 if __name__ == "__main__":
     chunks = load_documents()
     embeddings = OpenAIEmbeddings()
