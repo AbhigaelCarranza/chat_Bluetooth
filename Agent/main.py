@@ -15,12 +15,18 @@ from utils import load_documents, get_faiss_vectorStore , get_supabase_VectorSto
 
 client = Client()
 
-st.set_page_config(
-    page_title="LLM Leyes Federales",
-    page_icon="🔗",
-    layout="wide",
-    initial_sidebar_state="collapsed",
-)
+with st.sidebar:
+    st.title("LLM Bluetooth")
+    st.markdown(''' 
+    ## Bluetooth
+    This app is for the LLM Bluetooth project.
+    - [Streamlit](https://streamlit.io/)
+    - [LangChain](https://python.langchain.com/)
+    - [OpenAI](https://platform.openai.com/docs/models) LLM model
+    
+    ''')
+    add_vertical_space(2)
+    st.write("Follow me on [Linkedin](https://www.linkedin.com/in/abhigaelcarranza/)")
 
 @st.cache_resource(ttl="1h")
 def configure_retriever():
