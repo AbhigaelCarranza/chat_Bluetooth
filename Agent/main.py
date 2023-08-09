@@ -11,12 +11,12 @@ from langchain.chat_models import ChatOpenAI
 from langchain.schema import SystemMessage, AIMessage, HumanMessage
 from langchain.prompts import MessagesPlaceholder
 from langsmith import Client
-from utils import load_documents, get_faiss_vectorStore
+from utils import load_documents, get_faiss_vectorStore , get_supabase_VectorStore
 
 client = Client()
 
 st.set_page_config(
-    page_title="LLM Bluetooth",
+    page_title="LLM Leyes Federales",
     page_icon="🔗",
     layout="wide",
     initial_sidebar_state="collapsed",
@@ -26,22 +26,41 @@ st.set_page_config(
 def configure_retriever():
     documents=load_documents()
     embeddings = OpenAIEmbeddings()
-    vector_store=get_faiss_vectorStore(documents,embeddings)
-    return vector_store.as_retriever(search_type="similarity", search_kwargs={"k": 3})
+    # vector_store=get_faiss_vectorStore(documents,embeddings)
+    vector_store=get_supabase_VectorStore(embeddings)
+    return vector_store.as_retriever(search_type="similarity", search_kwargs={"k": 4})
 
-tool= create_retriever_tool(
+# tool= create_retriever_tool(
+#     configure_retriever(),
+#     "search_bluetooth_docs",
+#     "Searches and returns documents regarding Bluetooth. so if you are ever asked about Bluetooth you should use this tool."
+#     )
+
+tool_1= create_retriever_tool(
     configure_retriever(),
-    "search_bluetooth_docs",
-    "Searches and returns documents regarding Bluetooth. so if you are ever asked about Bluetooth you should use this tool."
+    "search_Leyes-Federales_docs",
+    "Searches and returns documents regarding Leyes Federales about Mexico. so if you are ever asked about Leyes Mexicanas you should use this tool."
     )
 
-tools=[tool]
+tools=[tool_1]
 llm=ChatOpenAI(temperature=0,streaming=True,model_name="gpt-3.5-turbo")
+# message=SystemMessage(
+#     content=(
+#         "You are a helpful chatbot who is tasked with answering questions about Bluetooth. "
+#         "Unless otherwise explicitly stated, it is probably fair to assume that questions are about Bluetooth. "
+#         "If there is any ambiguity, you probably assume they are about that."
+#     )
+# )
+
 message=SystemMessage(
     content=(
-        "You are a helpful chatbot who is tasked with answering questions about Bluetooth. "
-        "Unless otherwise explicitly stated, it is probably fair to assume that questions are about Bluetooth. "
-        "If there is any ambiguity, you probably assume they are about that."
+        """Eres un abogado de IA que proporciona asesoramiento legal instantáneo y herramientas de creación de documentos para asuntos personales y comerciales.
+Puedes responder preguntas legales comunes, redactar contratos y acuerdos, revisar y comparar documentos y realizar investigaciones legales.
+Puedes asistir a tus clientes con la gestión de casos, el análisis de documentos, fundamentar casos con la ley, la revisión de contratos, la diligencia debida, la facturación y más. 
+Puedes ayudar a tus clientes con derechos del consumidor, multas de aparcamiento, compensación por vuelos, comisiones bancarias, disputas con el propietario y más. 
+Utilizas el Inteligencia Artificial para comprender y generar textos legales sobre las leyes Mexicanas. 
+Debes presentarte con “Soy Jaime, tu Abogado personalizado”, pero solo al principio de una conversación. 
+"""
     )
 )
 
@@ -58,7 +77,7 @@ agent_executor=AgentExecutor(
 )
 
 memory=AgentTokenBufferMemory(llm=llm)
-starter_message="Ask me a question about Bluetooth."
+starter_message="Ask me a question about Leyes Mexicanas."
 
 if "messages" not in st.session_state or st.sidebar.button("Clear message history"):
     st.session_state["messages"]=[AIMessage(content=starter_message)]

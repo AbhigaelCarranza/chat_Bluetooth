@@ -16,6 +16,7 @@ langchain = {version = "*", extras = ["docarray"]}
 ipython = "*"
 llama-index = "*"
 requests = "*"
+supabase = "*"
 
 [dev-packages]
 

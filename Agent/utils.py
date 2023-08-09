@@ -1,7 +1,9 @@
 from langchain.document_loaders import PyPDFLoader
 from dotenv import load_dotenv
 from langchain.vectorstores import FAISS
+from langchain.vectorstores import SupabaseVectorStore
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from supabase.client import create_client, Client
 import tempfile
 import pickle
 import os
@@ -9,7 +11,8 @@ import streamlit as st
 
 def load_documents():
     load_dotenv()
-    file="/mnt/c/Users/amendez/github/chat_Bluetooth/Files/bluetooth-act.pdf"
+    # file="/mnt/c/Users/amendez/github/chat_Bluetooth/Files/bluetooth-act.pdf"
+    file="/Users/apple55/Github/Langchain/chat_Bluetooth/Files/bluetooth-act.pdf"
     pdf=PyPDFLoader(file)
     loaders=pdf.load()
     
@@ -38,4 +41,18 @@ def get_faiss_vectorStore(chunks,embeddings):
         vector_store=FAISS.from_documents(chunks, embeddings)
         with open("test.pkl", "wb") as f:
             pickle.dump(vector_store, f)
+    return vector_store
+
+def get_supabase_VectorStore(embeddings):
+    supabase_url = os.getenv("SUPABASE_URL")
+    supabase_key = os.getenv("SUPABASE_SERVICE_KEY")
+    supabase: Client = create_client(supabase_url, supabase_key)
+
+    vector_store=SupabaseVectorStore(
+        supabase, 
+        embeddings,
+        table_name="documents",
+        query_name="match_documents"
+        )
+
     return vector_store
